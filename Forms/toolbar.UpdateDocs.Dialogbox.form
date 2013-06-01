@@ -1,0 +1,461 @@
+<?xml version='1.0' encoding='utf-8'?>
+<form name='toolbar.UpdateDocs.Dialogbox' xmlns='http://www.lotus.com/dxl'
+ version='9.0' replicaid='C12579F2003CFDCB' nocompose='true' noquery='true'
+ publicaccess='false' designerversion='8' fromtemplate='Developer Toolbox'
+ comment='Rev 6.5: Notes Developer Toolbox: This form is used from the toolbar to update selected documents. Rev 4.2'
+ renderpassthrough='true'>
+<noteinfo noteid='25a' unid='C12579F2003CFDCBC1257286004960E0' sequence='88'>
+<created><datetime>20070218T142129,28+01</datetime></created>
+<modified><datetime dst='true'>20120604T174941,83+02</datetime></modified>
+<revised><datetime>20120212T142519,53+01</datetime></revised>
+<lastaccessed><datetime dst='true'>20120604T174941,82+02</datetime></lastaccessed>
+<addedtofile><datetime dst='true'>20120602T085100,16+02</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Jakob Majkilde/O=MAJKILDE</name><name>CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name
+>CN=Jakob Majkilde/OU=NDK/O=GEAP</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
+>CN=Jakob Majkilde/OU=NDK/O=GEAP</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
+>CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
+>CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/O=MAJKILDE</name></updatedby>
+<globals><code event='options'><lotusscript>Option Public
+
+</lotusscript></code><code event='declarations'><lotusscript>Private Const ITEMNAME = "SAVED_"
+
+Class Data
+'###############################################################
+	Private session As NotesSession	
+	Private db As NotesDatabase
+	Private ws As NotesUIWorkspace
+	Private doc As NotesDocument
+	Private profile As NotesDocument
+	
+	Sub new()
+	'------------------------------------------------------------------------------------------------------
+		Set session = New NotesSession
+		Set ws = New NotesUIWorkspace
+		
+		Set db = session.CurrentDatabase
+		Set profile = db.GetProfileDocument( "toolbar.Settings", session.UserName )
+		Set doc = ws.CurrentDocument.Document
+	End Sub
+	
+	Function deleteAgent( id )
+	'------------------------------------------------------------------------------------------------------
+		Dim filename As String
+		Dim s As String
+		Dim savedList As String
+		Dim v As Variant
+		Dim i As Integer
+		Const ITEMNAME = "SAVED_"
+		For i = 1 To 100
+			s = profile.GetItemValue( ITEMNAME &amp; i )( 0 )
+			If s &lt;&gt; "" Then
+				v = Split( s, "¤" )
+				savedList = savedList &amp; i &amp; ". " &amp; v(0) &amp; "¤"
+			End If
+		Next
+		
+		v = Split( savedList, "¤" )
+		filename = ws.Prompt( PROMPT_OKCANCELLIST,"Select", "Please select a saved formula", v( 0 ), v )
+		filename = ITEMNAME &amp; Strleft( filename,"." )
+		
+		Call profile.RemoveItem( filename )
+		Call profile.Save( True, False )
+		
+		Msgbox "Formula deleted", 64, "OK"
+	End Function
+	
+	
+	Function loadAgent( id )
+	'------------------------------------------------------------------------------------------------------
+		Dim filename As String
+		Dim s As String
+		Dim savedList As String
+		Dim v As Variant
+		Dim i As Integer
+		
+		If id = "0" Then filename = ITEMNAME &amp; "0" : Goto FOUND 'load last used
+		
+		For i = 1 To 100
+			s = profile.GetItemValue( ITEMNAME &amp; i )( 0 )
+			If s &lt;&gt; "" Then
+				v = Split( s, "¤" )
+				savedList = savedList &amp; i &amp; ". " &amp; v(0) &amp; "¤"
+			End If
+		Next
+		
+		v = Split( savedList, "¤" )
+		filename = ws.Prompt( PROMPT_OKCANCELLIST,"Select", "Please select a saved formula", v( 0 ), v )
+		filename = ITEMNAME &amp; Strleft( filename,"." )
+		
+FOUND:
+		s = profile.GetItemValue( filename )( 0 )
+		If s = "" Then End
+		
+		v = Split( s, "¤" )
+		
+		Select Case v( 1 )
+		Case "formula":
+			doc.filename = v( 0 )
+			doc.type = v( 1 )
+			doc.select = v( 2 )
+			doc.field = v( 3 )
+			doc.value = v( 4 )
+			doc.datatype = v( 5 )
+			doc.delete  = v( 6 )
+			doc.create = v( 7 )
+			doc.recalc = v( 8 )
+		Case "lotusscript":
+			doc.filename = v( 0 )
+			doc.type = v( 1 )
+			doc.select = v( 2 )
+			doc.script = v( 3 )
+		End Select
+		
+		Call ws.CurrentDocument.RefreshHideFormulas()
+	End Function
+	
+	
+	Function saveAgent( id As String )
+	'------------------------------------------------------------------------------------------------------
+		
+		Dim filename As String
+		filename = doc.filename( 0 ) 'Inputbox( "Please type a name for this code","Filename?", doc.subject( 0 ))
+		If filename = ""  Or filename = "-Untitled-" Then filename = Format( Now, "dd-mm-yy hh:mm" )
+		
+		Dim s As String
+		Select Case doc.type( 0 )
+		Case "formula":
+			s = filename &amp; "¤" &amp; doc.type( 0 ) &amp; "¤" &amp; doc.select( 0 ) &amp; "¤" &amp; doc.field( 0 ) &amp; "¤" &amp; doc.value( 0 ) &amp; "¤" &amp; doc.datatype( 0 ) &amp; "¤" &amp; doc.delete( 0 ) &amp; "¤" &amp; doc.create( 0 ) &amp; "¤" &amp; doc.recalc( 0 )
+		Case "lotusscript":
+			s = filename &amp; "¤" &amp; doc.type( 0 ) &amp; "¤" &amp; doc.select( 0 ) &amp; "¤" &amp; doc.script( 0 )
+		End Select
+		
+		Dim i As Integer
+		
+		If id="0" Then i = 0 : Goto FOUND 'save in last used slot
+		
+		'find the slot whit the previously saved version
+		For i = 1 To 100
+			If Strleft( profile.GetItemValue( ITEMNAME &amp; i )( 0 ), "¤" ) = filename Then
+				Goto FOUND
+			End If
+		Next 
+		
+		'not saved before - find a free slot
+		i = 1
+		Do Until Not profile.HasItem( ITEMNAME &amp;  i )
+			i = i+1
+		Loop
+		
+FOUND:
+		Call profile.ReplaceItemValue( ITEMNAME &amp; i, s )
+		Call profile.Save( True, False )
+		
+	End Function
+End Class</lotusscript></code></globals><code event='windowtitle'><formula
+>"Dialogbox"</formula></code><code event='queryclose'><lotusscript>Sub Queryclose(Source As Notesuidocument, Continue As Variant)
+	Dim d As New Data()
+	Call d.saveAgent( "0" )
+End Sub
+</lotusscript></code><code event='postopen'><lotusscript>Sub Postopen(Source As Notesuidocument)
+	Dim d As New Data()
+	Call d.loadAgent( "0" )
+End Sub</lotusscript></code>
+<body><richtext>
+<pardef id='1'/>
+<par def='1'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par>
+<table widthtype='fixedleft' columnspacing='0.0396in' refwidth='4.9840in'><tablecolumn
+ width='4.9049in'/>
+<tablerow>
+<tablecell borderwidth='0px'>
+<pardef id='2' hide='notes' keepwithnext='true' keeptogether='true'/>
+<par def='2'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par>
+<table minrowheight='5.1181in' leftmargin='0' widthtype='fixedleft' rowspacing='0.0785in'
+ columnspacing='0.0785in' refwidth='4.8563in'><tablecolumn width='4.6993in'/>
+<tablerow>
+<tablecell borderwidth='0px'>
+<pardef id='4' hide='notes web' keepwithnext='true' keeptogether='true'/>
+<par def='4'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par>
+<table widthtype='fitmargins' leftmargin='0' rowspacing='0.0396in' columnspacing='0.0396in'
+ refwidth='4.6993in'><tablecolumn width='16.1736%'/><tablecolumn width='83.8264%'/><tablecolumn
+ width='1.1813in'/>
+<tablerow>
+<tablecell valign='center' borderwidth='0px' bgcolor='#346698'>
+<pardef id='6' keepwithnext='true' keeptogether='true'/>
+<par def='6'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run><picture width='32px' height='32px' align='bottom'><gif
+>
+R0lGODlhIAAgAIcAAAAAAICAgMDAwP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAMAAAQALAAAAAAgACAA
+AAj1AAkIHEiwoEAACBMCMMiwIYGFDwVIlAgRokOGAAQszDhRY0SEFwty1DiS4kiLIR+e7KhxIsiU
+ClnKNPnSYUmXMWWiNIhQZ4CfP296bJhRKACgQXUSFTBA4cmcJBNiZBpV6EyFPJkOaNqT4lWcOzNu
+3ZqQJsuiGgPUjDiW7FGnZ0kGtSiW6gC5c28WBfqy7t2/afM63asWJELAiBHmDUBVbdqdKu1Kdsr4
+buG+IrteVVtZgNqHAyG/tUoT60HIB+d6Xs24teemKkMenYu09uWUqfnOrr0Wd0akivninupZ9+fh
+xD0bRm6TJHPfz6NLn069unWGAQEAOw==
+</gif></picture><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par></tablecell>
+<tablecell valign='center' borderwidth='0px' bgcolor='#346698'>
+<pardef id='7' keepwithnext='true' keeptogether='true'/>
+<par def='7'><run><font style='bold shadow' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='white'/>UPDATE SELECTED DOCUMENTS</run></par></tablecell>
+<tablecell valign='bottom' borderwidth='0px' bgcolor='#346698'>
+<cellbackground repeat='once'><imageref name='logo.m'/></cellbackground>
+<pardef id='8' align='right' keepwithnext='true' keeptogether='true'/>
+<par def='8'><run><font size='8pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20' color='white'/>ver 4.5</run></par></tablecell></tablerow></table>
+<pardef id='9' keepwithnext='true' keeptogether='true'/>
+<par def='9'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par>
+<par def='9'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par>
+<table widthtype='fitmargins' cellbordercolor='silver' leftmargin='0' rowspacing='0.0194in'
+ columnspacing='0.0396in' refwidth='4.6993in'><tablecolumn width='21.6944%'/><tablecolumn
+ width='6.2951%'/><tablecolumn width='72.0104%'/>
+<tablerow>
+<tablecell borderwidth='1px 0px'>
+<pardef id='10' keepwithnext='true' keeptogether='true'/>
+<par def='10'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#5f5f5f'/>Type:</run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<pardef id='11' keepwithnext='true' keeptogether='true'/>
+<par def='11'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#5f5f5f'/></run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<pardef id='12' keepwithnext='true' keeptogether='true'/>
+<par def='12'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/><field borderstyle='none' lookupeachchar='false' lookupaddressonrefresh='false'
+ type='keyword' kind='editable' name='type'><keywords helperbutton='false'
+ recalconchange='true' columns='2' ui='radiobutton'><textlist><text>@Formula|formula</text><text
+>Lotus Script|lotusscript</text></textlist></keywords><code event='defaultvalue'><formula
+>"formula"</formula></code></field></run><run><font size='12pt' style='strikethrough'
+ name='serif' color='#5f5f5f'/></run></par></tablecell></tablerow>
+<tablerow>
+<tablecell borderwidth='1px 0px'>
+<par def='10'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#5f5f5f'/>Name:</run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<pardef id='13' align='right' keepwithnext='true' keeptogether='true'/>
+<par def='13'><run><font size='12pt' style='strikethrough' name='serif' color='#5f5f5f'/></run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<par def='12'><run><font size='12pt' style='strikethrough' name='serif'/></run><run
+><font size='9pt' name='Verdana' pitch='variable' truetype='true' familyid='20'/><field
+ defaultfocus='true' type='text' kind='editable' name='filename'><code event='defaultvalue'><formula
+>"-Untitled-"</formula></code></field></run><run><font size='9pt' style='strikethrough'
+ name='Verdana' pitch='variable' truetype='true' familyid='20'/></run></par></tablecell></tablerow></table>
+<par def='9'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par>
+<table widthtype='fitmargins' cellbordercolor='silver' leftmargin='0.0104in'
+ rowspacing='0.0194in' columnspacing='0.0396in' refwidth='4.6889in'><tablecolumn
+ width='21.6979%'/><tablecolumn width='6.2951%'/><tablecolumn width='72.0069%'/>
+<tablerow>
+<tablecell borderwidth='1px 0px'>
+<pardef id='15' keepwithnext='true' keeptogether='true'><code event='hidewhen'><formula
+>!type="formula"</formula></code></pardef>
+<par def='15'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#5f5f5f'/>Field:</run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<pardef id='16' leftmargin='0' keepwithnext='true' keeptogether='true'><code
+ event='hidewhen'><formula>!type="formula"</formula></code></pardef>
+<par def='16'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<pardef id='17' keepwithnext='true' keeptogether='true'><code event='hidewhen'><formula
+>!type="formula"</formula></code></pardef>
+<par def='17'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run><run><font size='9pt' name='Verdana' pitch='variable'
+ truetype='true' familyid='20'/><field defaultfocus='true' type='text' kind='editable'
+ name='field'/></run><actionhotspot hotspotstyle='none'><code event='click'><formula
+>@SetField(  "field"; @Prompt([OkCancelList];"Select";"Select a fieldname"; @Subset(DocFields;1);DocFields));
+""</formula></code><picture height='11px' width='15px'><notesbitmap>
+lQAmAAAAAAAAAAAAAAABAAAAAAAAAA8ACwAIAAEACAABAAQAAACWAHAAAAAAAAAAAAAAAAsAXgAB
+As0AAQIBAM0CAQECAALLAAIDAQIAAssAAgMBAgACwwDFAcMAAgMBAgACxADDAQECwwACAwECAALF
+AAIBAsQAAgMBAgACywACAwECAALLAAIDAQIAAswDAQEBAs4BlwASAAAAuLi4AAAA////eHh4
+</notesbitmap></picture><run
+><font size='9pt' name='Verdana' pitch='variable' truetype='true' familyid='20'/></run></actionhotspot><run
+><font size='9pt' name='Verdana' pitch='variable' truetype='true' familyid='20'/></run></par></tablecell></tablerow>
+<tablerow>
+<tablecell borderwidth='1px 0px'>
+<par def='15'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#5f5f5f'/>Value:</run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<pardef id='18' align='right' keepwithnext='true' keeptogether='true'><code
+ event='hidewhen'><formula>!type="formula"</formula></code></pardef>
+<par def='18'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#ff9b3c'/></run><popup hotspotstyle='none'><popuptext
+>Notes @formula expression</popuptext><run><font size='9pt' style='bold' name='Verdana'
+ pitch='variable' truetype='true' familyid='20' color='#ff9b3c'/>@</run></popup><run
+><font size='9pt' style='bold' name='Verdana' pitch='variable' truetype='true'
+ familyid='20' color='#ff9b3c'/></run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<par def='17'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run><run><font size='9pt' name='Verdana' pitch='variable'
+ truetype='true' familyid='20'/><field type='text' kind='editable' name='value'/></run><run
+><font size='9pt' name='Verdana' pitch='variable' truetype='true' familyid='20'/></run></par></tablecell></tablerow>
+<tablerow>
+<tablecell borderwidth='1px 0px'>
+<par def='15'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#5f5f5f'/>Datatype:</run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<pardef id='19' keepwithnext='true' keeptogether='true'><code event='hidewhen'><formula
+>!type="formula"</formula></code></pardef>
+<par def='19'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<par def='17'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#5f5f5f'/></run><run><font size='9pt'
+ name='Verdana' pitch='variable' truetype='true' familyid='20'/><field usenotesstyle='false'
+ height='0.2188in' width='1.5750in' multiline='true' borderstyle='inset' lookupeachchar='false'
+ lookupaddressonrefresh='false' type='keyword' kind='editable' name='datatype'><keywords
+ helperbutton='false' columns='1' ui='combobox'><textlist><text>Default (as is )|default</text><text
+>Text|text</text><text>Number|number</text><text>Timedate|timedate</text><text
+>Richtext|richtext</text><text>Readers|readers</text><text>Authors|authors</text></textlist></keywords><code
+ event='defaultvalue'><formula>"default"</formula></code></field></run></par></tablecell></tablerow>
+<tablerow>
+<tablecell borderwidth='1px 0px'>
+<par def='15'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#5f5f5f'/>Options:</run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<par def='19'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par></tablecell>
+<tablecell borderwidth='1px 0px'>
+<par def='17'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#5f5f5f'/></run><run><font size='9pt'
+ name='Verdana' pitch='variable' truetype='true' familyid='20'/><field borderstyle='none'
+ lookupeachchar='false' lookupaddressonrefresh='false' type='keyword' allowmultivalues='true'
+ kind='editable' name='delete' listinputseparators='comma' listdisplayseparator='comma'><keywords
+ helperbutton='false' columns='1' ui='checkbox'><textlist><text>Delete field if empty|1</text></textlist></keywords><code
+ event='defaultvalue'><formula>"1"</formula></code></field></run><run><font
+ size='9pt' style='bold' name='Verdana' pitch='variable' truetype='true' familyid='20'
+ color='#5f5f5f'/></run></par>
+<par def='17'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#5f5f5f'/></run><run><font size='9pt'
+ name='Verdana' pitch='variable' truetype='true' familyid='20'/><field borderstyle='none'
+ lookupeachchar='false' lookupaddressonrefresh='false' type='keyword' allowmultivalues='true'
+ kind='editable' name='create' listinputseparators='comma' listdisplayseparator='comma'><keywords
+ helperbutton='false' columns='1' ui='checkbox'><textlist><text>Create field if it doesn't exits|1</text></textlist></keywords><code
+ event='defaultvalue'><formula>"1"</formula></code></field></run><run><font
+ size='9pt' style='bold' name='Verdana' pitch='variable' truetype='true' familyid='20'
+ color='#5f5f5f'/></run></par>
+<par def='17'><run><font size='9pt' style='bold' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#5f5f5f'/></run><run><font size='9pt'
+ name='Verdana' pitch='variable' truetype='true' familyid='20'/><field borderstyle='none'
+ lookupeachchar='false' lookupaddressonrefresh='false' type='keyword' allowmultivalues='true'
+ kind='editable' name='recalc' listinputseparators='comma' listdisplayseparator='comma'><keywords
+ helperbutton='false' columns='1' ui='checkbox'><textlist><text>Compute with form|1</text></textlist></keywords><code
+ event='defaultvalue'><formula>"0"</formula></code></field></run><run><font
+ size='9pt' style='bold' name='Verdana' pitch='variable' truetype='true' familyid='20'
+ color='#5f5f5f'/></run></par></tablecell></tablerow></table>
+<par def='4'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par>
+<table widthtype='fitmargins' cellbordercolor='silver' leftmargin='0' refwidth='4.6993in'><tablecolumn
+ width='100%'/>
+<tablerow>
+<tablecell borderwidth='1px 0px'>
+<pardef id='21' keepwithnext='true' keeptogether='true'><code event='hidewhen'><formula
+>!type="lotusscript"</formula></code></pardef>
+<par def='21'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20' color='blue'/>Function </run><run><font size='9pt' name='Verdana'
+ pitch='variable' truetype='true' familyid='20'/>Update( doc </run><run><font
+ size='9pt' name='Verdana' pitch='variable' truetype='true' familyid='20'
+ color='blue'/>As</run><run><font size='9pt' name='Verdana' pitch='variable'
+ truetype='true' familyid='20'/> NotesDocument, db </run><run><font size='9pt'
+ name='Verdana' pitch='variable' truetype='true' familyid='20' color='blue'/>As</run><run
+><font size='9pt' name='Verdana' pitch='variable' truetype='true' familyid='20'/> NotesDatabase )</run></par>
+<table widthtype='fitmargins' leftmargin='0' refwidth='4.6993in'><tablecolumn
+ width='0.3938in'/><tablecolumn width='100%'/>
+<tablerow>
+<tablecell borderwidth='0px'>
+<pardef id='23' keepwithnext='true' keeptogether='true'><code event='hidewhen'><formula
+>!type="lotusscript"</formula></code></pardef>
+<par def='23'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par></tablecell>
+<tablecell borderwidth='0px'>
+<pardef id='24' keepwithnext='true' keeptogether='true'><code event='hidewhen'><formula
+>!type="lotusscript"</formula></code></pardef>
+<par def='24'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20' color='blue'/>Dim </run><run><font size='9pt' name='Verdana'
+ pitch='variable' truetype='true' familyid='20'/>session </run><run><font
+ size='9pt' name='Verdana' pitch='variable' truetype='true' familyid='20'
+ color='blue'/>As New</run><run><font size='9pt' name='Verdana' pitch='variable'
+ truetype='true' familyid='20'/> NotesSession</run></par>
+<par def='24'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run><run><font size='9pt' name='Verdana' pitch='variable'
+ truetype='true' familyid='20'/><field type='text' kind='editable' name='script'/></run><run
+><font size='9pt' name='Verdana' pitch='variable' truetype='true' familyid='20'/></run></par>
+<par def='24'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20' color='blue'/>Call</run><run><font size='9pt' name='Verdana'
+ pitch='variable' truetype='true' familyid='20'/> doc.Save( </run><run><font
+ size='9pt' name='Verdana' pitch='variable' truetype='true' familyid='20'
+ color='blue'/>True</run><run><font size='9pt' name='Verdana' pitch='variable'
+ truetype='true' familyid='20'/>, </run><run><font size='9pt' name='Verdana'
+ pitch='variable' truetype='true' familyid='20' color='blue'/>False</run><run
+><font size='9pt' name='Verdana' pitch='variable' truetype='true' familyid='20'/> )</run></par></tablecell></tablerow></table>
+<par def='21'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20' color='blue'/>End Function</run></par></tablecell></tablerow></table>
+<par def='9'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par>
+<par def='9'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/>Re-use:</run><run><font size='9pt' name='Verdana' pitch='variable'
+ truetype='true' familyid='20' color='#ff9b3c'/> </run><actionhotspot hotspotstyle='none'><run
+><font size='9pt' style='bold underline' name='Verdana' pitch='variable' truetype='true'
+ familyid='20' color='#6ea0de'/>save</run><code event='options'><lotusscript
+>Option Declare
+
+</lotusscript></code><code event='click'><lotusscript>Sub Click(Source As Button)
+	Dim d As New Data()
+	Call d.saveAgent( "" )
+	
+	Msgbox "Formula saved", 64, "Success"
+End Sub</lotusscript></code></actionhotspot><run><font size='9pt' style='bold'
+ name='Verdana' pitch='variable' truetype='true' familyid='20' color='#6ea0de'/> </run><actionhotspot
+ hotspotstyle='none'><run><font size='9pt' style='bold underline' name='Verdana'
+ pitch='variable' truetype='true' familyid='20' color='#6ea0de'/>load</run><code
+ event='options'><lotusscript>Option Declare
+
+</lotusscript></code><code event='click'><lotusscript>Sub Click(Source As Button)
+	Dim d As New Data()
+	Call d.loadAgent( "" )
+End Sub</lotusscript></code></actionhotspot><run><font size='9pt' style='bold'
+ name='Verdana' pitch='variable' truetype='true' familyid='20' color='#6ea0de'/> </run><actionhotspot
+ hotspotstyle='none'><run><font size='9pt' style='bold underline' name='Verdana'
+ pitch='variable' truetype='true' familyid='20' color='#6ea0de'/>delete</run><code
+ event='options'><lotusscript>Option Declare
+
+</lotusscript></code><code event='click'><lotusscript>Sub Click(Source As Button)
+	Dim d As New Data()
+	Call d.deleteAgent( "" )
+	
+	Msgbox "Formula deleted", 64, "OK"
+End Sub</lotusscript></code></actionhotspot><run><font size='9pt' name='Verdana'
+ pitch='variable' truetype='true' familyid='20'/></run></par></tablecell></tablerow></table>
+<pardef id='25' align='right' keepwithnext='true' keeptogether='true'/>
+<par def='25'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run><button width='0.7875in' widthtype='fixed' wraptext='true'
+ edge='rounded' bgcolor='white' type='cancel' default='true'><font size='9pt'
+ name='Verdana' pitch='variable' truetype='true' familyid='20'/>Cancel</button><run
+><font size='9pt' name='Verdana' pitch='variable' truetype='true' familyid='20'/></run><button
+ width='0.7875in' widthtype='fixed' wraptext='true' edge='rounded' bgcolor='white'
+ type='ok' default='true'><font size='9pt' name='Verdana' pitch='variable'
+ truetype='true' familyid='20'/>OK</button><run><font size='9pt' name='Verdana'
+ pitch='variable' truetype='true' familyid='20'/></run></par>
+<par def='25'><run><font size='3pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par></tablecell></tablerow></table>
+<par def='1'><run><font size='9pt' name='Verdana' pitch='variable' truetype='true'
+ familyid='20'/></run></par></richtext></body>
+<item name='OriginalModTime' sign='true'><datetime dst='true'>20051013T163235,27+02</datetime></item>
+<item name='$$ScriptName' summary='false' sign='true'><text>toolbar.UpdateDocs.Dialogbox</text></item></form>
+

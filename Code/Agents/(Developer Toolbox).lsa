@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='utf-8'?>
+<agent name='(Developer Toolbox)' alias='toolbar.UpdateDocs' xmlns='http://www.lotus.com/dxl'
+ version='9.0' replicaid='C12579F2003CFDCB' hide='v3' publicaccess='false'
+ designerversion='8' comment='Rev 6.6: Used from the Developer toolbar / majkilde | Design'>
+<noteinfo noteid='256' unid='C12579F2003CFDCBC1257286004808E0' sequence='89'>
+<created><datetime>20070218T140648,64+01</datetime></created>
+<modified><datetime dst='true'>20120602T085058,00+02</datetime></modified>
+<revised><datetime dst='true'>20120412T122011,25+02</datetime></revised>
+<lastaccessed><datetime dst='true'>20120602T085057,99+02</datetime></lastaccessed>
+<addedtofile><datetime dst='true'>20120602T085057,99+02</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Jakob Majkilde/OU=NDK/O=GEAP</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
+>CN=Jakob Majkilde/OU=NDK/O=GEAP</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
+>CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
+>CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Manager/O=mths</name><name
+>CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/O=MAJKILDE</name></updatedby>
+<designchange><datetime>20120212T142416,41+01</datetime></designchange>
+<trigger type='actionsmenu'/>
+<documentset type='selected'/><code event='options'><lotusscript>Option Public
+Option Declare
+
+</lotusscript></code><code event='declarations'><lotusscript>'Must be public and global / used from user script with an Execute statement
+Public  session As  NotesSession
+Public db As NotesDatabase
+Public doc As NotesDocument
+
+</lotusscript></code><code event='initialize'><lotusscript>Sub Initialize
+	On Error Goto ERRORHANDLER
+	
+	Dim ws As New NotesUIWorkspace
+	Dim coll As NotesDocumentCollection
+	
+	Set session = New NotesSession
+	Dim v As Variant
+	
+	Set db = session.CurrentDatabase
+	Set coll = db.UnprocessedDocuments
+	
+	Dim dlg As NotesDocument
+	Set dlg = db.CreateDocument
+	
+	Set doc = coll.GetFirstDocument
+	
+	'get the item names from the first document
+	Dim docfields As Variant
+	docfields = Evaluate( |@sort(@DocFields)|, doc ) 
+	dlg.docFields = docfields
+	
+	Dim cnt As Long
+	
+	Dim isDirty As Boolean
+	
+	If ws.DialogBox( "toolbar.UpdateDocs.Dialogbox", True, True, True, False, False, False, "Update selected documents", dlg, True, True ) Then
+		Select Case dlg.type( 0 )
+			
+		Case "formula":
+			Dim itemname As String
+			Dim item As NotesItem
+			
+			itemname = dlg.field( 0 )
+			
+			Set doc = coll.GetFirstDocument
+			Do Until doc Is Nothing	
+				isDirty = False
+				
+				If itemname &lt;&gt; "" Then
+					If dlg.value( 0 ) = "" Then
+						v = ""
+					Else
+						v = Evaluate( dlg.value( 0 ), doc )
+					End If
+					
+					If dlg.create( 0 ) &lt;&gt; "1" And Cstr( doc.GetItemValue( itemname )( 0 ))  = "" Then 
+					'skip / don't create
+					Else
+						Set item = doc.ReplaceItemValue( itemname, v )
+						If item.Text = "" And dlg.delete( 0 ) ="1" Then Call doc.RemoveItem( itemname )
+						
+						isDirty = True
+					End If
+				End If
+				
+				If dlg.recalc( 0 ) = "1" Then Call doc.ComputeWithForm( False, False ) : isDirty = True
+				
+				If isDirty Then Call doc.Save( True, False )
+				
+				cnt = cnt+1
+				Print "Processing: " &amp; cnt &amp; "/" &amp; coll.Count
+				Set doc = coll.GetNextDocument( doc )
+			Loop
+			
+		Case "lotusscript":
+			Dim code As String
+			
+			code = dlg.script( 0 )
+			Set doc = coll.GetFirstDocument
+			Do Until doc Is Nothing	
+				v = Execute( code )
+				Call doc.Save( True, False )
+				
+				cnt = cnt+1
+				Print "Processing: " &amp; cnt &amp; "/" &amp; coll.Count
+				Set doc = coll.GetNextDocument( doc )
+			Loop
+			
+		End Select
+	End If
+	
+DONE:
+	Exit Sub
+	
+ERRORHANDLER:
+	Msgbox "Error in formula: " &amp; Err &amp; " - " &amp; Error, 64, "Error"
+	Resume DONE
+End Sub</lotusscript></code>
+<rundata processeddocs='0' exitcode='0' agentdata='B477992B7CE8E06EC1257344002EEC83'>
+<agentmodified><datetime dst='true'>20120602T085058,00+02</datetime></agentmodified>
+<agentrun><datetime dst='true'>20120606T190934,32+02</datetime></agentrun>
+<runlog>Started running agent '(Developer Toolbox)|toolbar.UpdateDocs' on 06-06-2012 19:09:32
+Running on selected documents: 1 total
+Found 1 document(s) that match search criteria
+Ran LotusScript code
+Done running agent '(Developer Toolbox)|toolbar.UpdateDocs' on 06-06-2012 19:09:34
+</runlog></rundata>
+<item name='$POID'><datetime>20110207T110929,36+01</datetime></item>
+<item name='$palmVersion'><datetime>20120212T142429,00+01</datetime></item>
+<item name='$palmDate'><datetime dst='true'>20120412T121950,00+02</datetime></item>
+<item name='$palmUser'><text>CN=Jakob Majkilde/O=MAJKILDE</text></item>
+<item name='$palmSource'><text>template=Design;title=Design 6.9.3 NTF;filename=templates\design.nsf;server=SERVER;</text></item></agent>
+

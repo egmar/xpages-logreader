@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<view xmlns='http://www.lotus.com/dxl' version='9.0' replicaid='C12579F2003CFDCB'
+ showinmenu='true' publicaccess='false' default='true' noviewformat='true'>
+<noteinfo noteid='11a' unid='1B925E1DDEAC08B0C12579F2003CFDCF' sequence='2'>
+<created><datetime dst='true'>20120502T130611,35+02</datetime></created>
+<modified><datetime dst='true'>20120531T163430,65+02</datetime></modified>
+<revised><datetime dst='true'>20120531T163430,64+02</datetime></revised>
+<lastaccessed><datetime dst='true'>20120531T163430,64+02</datetime></lastaccessed>
+<addedtofile><datetime dst='true'>20120502T130611,36+02</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Jakob Majkilde/O=MAJKILDE</name></updatedby><code event='selection'><formula
+>SELECT @All</formula></code>
+<item name='$FormulaClass'><text>1</text></item></view>
+
