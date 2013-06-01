@@ -36,10 +36,7 @@ public class Reader implements Serializable {
 	// Often used functions
 	private Session getCurrentSession() {
 		NotesContext nc = NotesContext.getCurrentUnchecked();
-		// return (null != nc) ? nc.getCurrentSession() : null;
-		return (null != nc) ? nc.getSessionAsSignerFullAdmin() : null;
-		
-
+		return (null != nc) ? nc.getCurrentSession() : null;
 	}
 
 	@SuppressWarnings("unchecked")

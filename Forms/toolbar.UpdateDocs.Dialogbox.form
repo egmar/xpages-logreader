@@ -4,17 +4,14 @@
  publicaccess='false' designerversion='8' fromtemplate='Developer Toolbox'
  comment='Rev 6.5: Notes Developer Toolbox: This form is used from the toolbar to update selected documents. Rev 4.2'
  renderpassthrough='true'>
-<noteinfo noteid='25a' unid='C12579F2003CFDCBC1257286004960E0' sequence='88'>
+<noteinfo noteid='25a' unid='C12579F2003CFDCBC1257286004960E0' sequence='90'>
 <created><datetime>20070218T142129,28+01</datetime></created>
-<modified><datetime dst='true'>20120604T174941,83+02</datetime></modified>
-<revised><datetime>20120212T142519,53+01</datetime></revised>
-<lastaccessed><datetime dst='true'>20120604T174941,82+02</datetime></lastaccessed>
+<modified><datetime dst='true'>20130601T205915,82+02</datetime></modified>
+<revised><datetime dst='true'>20130601T205915,81+02</datetime></revised>
+<lastaccessed><datetime dst='true'>20130601T205915,81+02</datetime></lastaccessed>
 <addedtofile><datetime dst='true'>20120602T085100,16+02</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Jakob Majkilde/O=MAJKILDE</name><name>CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name
->CN=Jakob Majkilde/OU=NDK/O=GEAP</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
->CN=Jakob Majkilde/OU=NDK/O=GEAP</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
->CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
->CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/O=MAJKILDE</name></updatedby>
+<updatedby><name>CN=Egor Margineanu/O=Egor Margineanu</name></updatedby>
+<wassignedby><name>CN=Egor Margineanu/O=Egor Margineanu</name></wassignedby>
 <globals><code event='options'><lotusscript>Option Public
 
 </lotusscript></code><code event='declarations'><lotusscript>Private Const ITEMNAME = "SAVED_"

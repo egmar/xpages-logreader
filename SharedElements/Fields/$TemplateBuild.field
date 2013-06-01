@@ -1,17 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
 <sharedfield name='$TemplateBuild' xmlns='http://www.lotus.com/dxl' version='9.0'
  replicaid='C12579F2003CFDCB' language='en' comment='Rev 6.5'>
-<noteinfo noteid='25e' unid='C12579F2003CFDCBC12572A7002AC3BF' sequence='56'>
+<noteinfo noteid='25e' unid='C12579F2003CFDCBC12572A7002AC3BF' sequence='57'>
 <created><datetime>20070323T084706,23+01</datetime></created>
-<modified><datetime dst='true'>20120606T190943,41+02</datetime></modified>
-<revised><datetime dst='true'>20120606T190943,40+02</datetime></revised>
-<lastaccessed><datetime dst='true'>20120606T190943,40+02</datetime></lastaccessed>
+<modified><datetime dst='true'>20130601T205916,02+02</datetime></modified>
+<revised><datetime dst='true'>20130601T205916,01+02</datetime></revised>
+<lastaccessed><datetime dst='true'>20130601T205916,01+02</datetime></lastaccessed>
 <addedtofile><datetime dst='true'>20120604T172832,60+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Jakob Majkilde/O=MAJKILDE</name><name>CN=Jakob Majkilde/OU=NDK/O=GEAP</name><name
 >CN=Jakob Majkilde/O=MAJKILDE</name><name>CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name
 >CN=Jakob Majkilde/OU=NDK/O=GEAP</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
 >CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/OU=NDK/O=GEAP</name><name
->CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/O=MAJKILDE</name></updatedby><field
+>CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
+>CN=Egor Margineanu/O=Egor Margineanu</name></updatedby>
+<wassignedby><name>CN=Egor Margineanu/O=Egor Margineanu</name></wassignedby><field
  type='text' kind='editable' name='$TemplateBuild'/>
 <item name='$TemplateBuild' sign='true'><text>1.2</text></item>
 <item name='$TemplateBuildName' sign='true'><text>Log File Reader</text></item>

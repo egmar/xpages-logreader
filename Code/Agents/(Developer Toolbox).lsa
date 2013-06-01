@@ -2,18 +2,20 @@
 <agent name='(Developer Toolbox)' alias='toolbar.UpdateDocs' xmlns='http://www.lotus.com/dxl'
  version='9.0' replicaid='C12579F2003CFDCB' hide='v3' publicaccess='false'
  designerversion='8' comment='Rev 6.6: Used from the Developer toolbar / majkilde | Design'>
-<noteinfo noteid='256' unid='C12579F2003CFDCBC1257286004808E0' sequence='89'>
+<noteinfo noteid='256' unid='C12579F2003CFDCBC1257286004808E0' sequence='90'>
 <created><datetime>20070218T140648,64+01</datetime></created>
-<modified><datetime dst='true'>20120602T085058,00+02</datetime></modified>
-<revised><datetime dst='true'>20120412T122011,25+02</datetime></revised>
-<lastaccessed><datetime dst='true'>20120602T085057,99+02</datetime></lastaccessed>
+<modified><datetime dst='true'>20130601T205916,04+02</datetime></modified>
+<revised><datetime dst='true'>20130601T205916,03+02</datetime></revised>
+<lastaccessed><datetime dst='true'>20130601T205916,03+02</datetime></lastaccessed>
 <addedtofile><datetime dst='true'>20120602T085057,99+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Jakob Majkilde/OU=NDK/O=GEAP</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
 >CN=Jakob Majkilde/OU=NDK/O=GEAP</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
 >CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
 >CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Manager/O=mths</name><name
->CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/O=MAJKILDE</name></updatedby>
-<designchange><datetime>20120212T142416,41+01</datetime></designchange>
+>CN=Jakob Majkilde/OU=Majkilde/O=mths</name><name>CN=Jakob Majkilde/O=MAJKILDE</name><name
+>CN=Egor Margineanu/O=Egor Margineanu</name></updatedby>
+<wassignedby><name>CN=Egor Margineanu/O=Egor Margineanu</name></wassignedby>
+<designchange><datetime dst='true'>20130601T205915,54+02</datetime></designchange>
 <trigger type='actionsmenu'/>
 <documentset type='selected'/><code event='options'><lotusscript>Option Public
 Option Declare
