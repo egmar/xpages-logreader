@@ -1,0 +1,15 @@
+OpenNTF XPages Log File Reader
+(C)Copyright 2012 Jakob Majkilde
+
+This product includes software contributed to
+OpenNTF Alliance (http://www.OpenNTF.org/)
+
+This product is licensed under the terms of the Apache 2.0 license.
+
+The project contains the following 3rd party code:
+
+The product contains 'hijackAndPublishPartialRefresh' function, which is available from http://dontpanic82.blogspot.com/2010/01/xpages-hijackingpublishing-partial.html, and which is under the ""Share and enjoy" license (according to the author: Tommy Valand).
+
+The product includes the 'XPages Debug Toolbar' created by Mark Leusink, found on http://www.openntf.org/internal/home.nsf/project.xsp?action=openDocument&name=XPage%20Debug%20Toolbar and licensed under 'Apache License, Version 2.0'
+
+The icon for this application comes from http://findicons.com/icon/164168/report?id=426962 and is licensed under "Creative Commons Attribution (by)"
