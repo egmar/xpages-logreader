@@ -1,13 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <note default='true' class='icon' xmlns='http://www.lotus.com/dxl' version='9.0'
  replicaid='C12579F2003CFDCB'>
-<noteinfo noteid='11e' unid='2C9E58F9F48A268EC12579F2003CFDD0' sequence='23'>
+<noteinfo noteid='11e' unid='2C9E58F9F48A268EC12579F2003CFDD0' sequence='28'>
 <created><datetime dst='true'>20120502T130611,36+02</datetime></created>
-<modified><datetime dst='true'>20120606T190901,88+02</datetime></modified>
-<revised><datetime dst='true'>20120606T190901,87+02</datetime></revised>
-<lastaccessed><datetime dst='true'>20120606T190901,87+02</datetime></lastaccessed>
+<modified><datetime dst='true'>20130601T214545,63+02</datetime></modified>
+<revised><datetime dst='true'>20130601T214545,62+02</datetime></revised>
+<lastaccessed><datetime dst='true'>20130601T214545,62+02</datetime></lastaccessed>
 <addedtofile><datetime dst='true'>20120502T130611,38+02</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Jakob Majkilde/O=MAJKILDE</name></updatedby>
+<updatedby><name>CN=Jakob Majkilde/O=MAJKILDE</name><name>CN=Egor Margineanu/O=Egor Margineanu</name></updatedby>
+<wassignedby><name>CN=Jakob Majkilde/O=MAJKILDE</name></wassignedby>
 <item name='IconBitmap' summary='true'>
 <rawitemdata type='6'>
 AiAgAQAA///////wD///gAH//gAAf/wAAD/4AAAf8AAAD+AAAAfgAAAHwAAAA8AAAAPAAAADgAAA
@@ -24,12 +25,12 @@ L2ZvgAAACMZmZmZmZmZmZmZmbIAAAACMZmZmZmZmZmZmZsgAAAAACMZmZmZmZmZmZmyAAAAAAACM
 AAAAUEECICABAAD/////+A4DgA==
 </rawitemdata></item>
 <item name='$DBTheme'><text>Majkilde.theme</text></item>
-<item name='$DefaultXPage'><text>Reader.xsp</text></item>
 <item name='$DefaultFrameset'><text>Splash</text></item>
 <item name='$Daos'><text>0</text></item>
-<item name='$DefaultClientXPage'><text>Reader.xsp</text></item>
 <item name='$Flags'><text>7J!?</text></item>
 <item name='$FlagsNoRefresh'><text/></item>
-<item name='$TITLE'><text>XPages Log File Reader
+<item name='$DefaultXPage'><text>index.xsp</text></item>
+<item name='$DefaultClientXPage'><text>index.xsp</text></item>
+<item name='$TITLE'><text>XPages Log Files Reader
 #1Log File Reader</text></item></note>
 

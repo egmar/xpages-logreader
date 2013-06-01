@@ -71,17 +71,17 @@
 							<xp:this.href><![CDATA[?tab=console]]></xp:this.href>
 						</xp:tabPanel>
 						<xp:tabPanel label="XPages log" id="xpages"
-							href="/Reader.xsp?tab=xpages"></xp:tabPanel>
+							href="/index.xsp?tab=xpages"></xp:tabPanel>
 						<xp:tabPanel label="Error logs" id="error"
-							href="/Reader.xsp?tab=error"></xp:tabPanel>
+							href="/index.xsp?tab=error"></xp:tabPanel>
 						<xp:tabPanel label="Trace logs" id="trace"
-							href="/Reader.xsp?tab=trace"></xp:tabPanel>
+							href="/index.xsp?tab=trace"></xp:tabPanel>
 						<xp:tabPanel label="Startup.log" id="startup"
-							href="/Reader.xsp?tab=startup"></xp:tabPanel>
-						<xp:tabPanel label="Log.nsf" id="log" href="/Reader.xsp?tab=log"></xp:tabPanel>
+							href="/index.xsp?tab=startup"></xp:tabPanel>
+						<xp:tabPanel label="Log.nsf" id="log" href="/index.xsp?tab=log"></xp:tabPanel>
 						<xp:tabPanel label="Settings" id="settings"
-							href="/Reader.xsp?tab=settings"></xp:tabPanel>
-						<xp:tabPanel label="About" id="about" href="/Reader.xsp?tab=about"></xp:tabPanel>
+							href="/index.xsp?tab=settings"></xp:tabPanel>
+						<xp:tabPanel label="About" id="about" href="/index.xsp?tab=about"></xp:tabPanel>
 					</xp:tabbedPanel>
 					<!-- END Tabs -->
 
@@ -120,32 +120,32 @@
 								<xp:panel tagName="li">
 									<xp:this.styleClass><![CDATA[#{javascript:if (context.getUrlParameter("menu")=="ini" || context.getUrlParameter("menu")=="" ) "lotusSelected"}]]></xp:this.styleClass>
 									<xp:link escape="true" text="notes.ini">
-										<xp:this.value><![CDATA[/Reader.xsp?tab=settings&menu=ini]]></xp:this.value>
+										<xp:this.value><![CDATA[/index.xsp?tab=settings&menu=ini]]></xp:this.value>
 									</xp:link>
 								</xp:panel>
 								<xp:panel tagName="li">
 									<xp:this.styleClass><![CDATA[#{javascript:if (context.getUrlParameter("menu")=="xsp" ) "lotusSelected"}]]></xp:this.styleClass>
 									<xp:link escape="true" text="xsp.properties">
-										<xp:this.value><![CDATA[/Reader.xsp?tab=settings&menu=xsp]]></xp:this.value>
+										<xp:this.value><![CDATA[/index.xsp?tab=settings&menu=xsp]]></xp:this.value>
 									</xp:link>
 								</xp:panel>
 								<xp:panel tagName="li" loaded="false">
 									<xp:this.styleClass><![CDATA[#{javascript:if (context.getUrlParameter("menu")=="jvm" ) "lotusSelected"}]]></xp:this.styleClass>
 									<xp:link escape="true"
 										text="jvm.properties">
-										<xp:this.value><![CDATA[/Reader.xsp?tab=settings&menu=jvm]]></xp:this.value>
+										<xp:this.value><![CDATA[/index.xsp?tab=settings&menu=jvm]]></xp:this.value>
 									</xp:link>
 								</xp:panel>
 								<xp:panel tagName="li">
 									<xp:this.styleClass><![CDATA[#{javascript:if (context.getUrlParameter("menu")=="javapolicy" ) "lotusSelected"}]]></xp:this.styleClass>
 									<xp:link escape="true" text="java.policy">
-										<xp:this.value><![CDATA[/Reader.xsp?tab=settings&menu=javapolicy]]></xp:this.value>
+										<xp:this.value><![CDATA[/index.xsp?tab=settings&menu=javapolicy]]></xp:this.value>
 									</xp:link>
 								</xp:panel>
 								<xp:panel tagName="li">
 									<xp:this.styleClass><![CDATA[#{javascript:if (context.getUrlParameter("menu")=="rcpinstall" ) "lotusSelected"}]]></xp:this.styleClass>
 									<xp:link escape="true" text="rcpinstall.properties">
-										<xp:this.value><![CDATA[/Reader.xsp?tab=settings&menu=rcpinstall]]></xp:this.value>
+										<xp:this.value><![CDATA[/index.xsp?tab=settings&menu=rcpinstall]]></xp:this.value>
 									</xp:link>
 								</xp:panel>
 							</ul>
